@@ -55,12 +55,24 @@
       },
       "versions": [
         {
+          "version": "0.1.5",
+          "publishTimestamp": 1795429268,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/MioYuio/cyberfish-seekbrain-dsh",
+            "commit": "d6401242c4bed0df499c50109b3a23fbd9e70286"
+          },
+          "engines": {
+            "dsh": ">=0.2.0-rc.2 <0.3.0"
+          }
+        },
+        {
           "version": "0.1.4",
           "publishTimestamp": 1795420331,
           "source": {
             "type": "git",
             "url": "https://github.com/MioYuio/cyberfish-seekbrain-dsh",
-            "commit": "6410616206f3cf63ebb6b4907118b8be4960121a"
+            "commit": "f355526"
           },
           "engines": {
             "dsh": ">=0.2.0-rc.2 <0.3.0"
