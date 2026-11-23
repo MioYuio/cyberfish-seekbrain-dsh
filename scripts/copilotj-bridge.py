@@ -27,9 +27,21 @@ JAR = f'CopilotJBridge-{VERSION}.jar'
 MCP = 'http://127.0.0.1:3001/mcp'
 
 
-def default_fiji():
+def candidate_fijis():
+    home = pathlib.Path.home()
     if sys.platform == 'darwin':
-        return pathlib.Path('/Applications/Fiji.app')
+        return [pathlib.Path('/Applications/Fiji.app'), home / 'Applications/Fiji.app']
+    if sys.platform == 'win32':
+        roots = [pathlib.Path(os.environ.get('ProgramFiles', 'C:/Program Files')),
+                 pathlib.Path(os.environ.get('LOCALAPPDATA', str(home / 'AppData/Local')))]
+        return [root / name for root in roots for name in ['Fiji', 'Fiji.app', 'fiji']]
+    return [home / 'Fiji', home / 'fiji']
+
+
+def discover_fiji():
+    for candidate in candidate_fijis():
+        if candidate.is_dir() and not candidate.is_symlink():
+            return candidate
     return None
 
 
@@ -65,16 +77,18 @@ def java_version(fiji):
 
 
 def report(fiji, dest):
-    target = dest / JAR
-    installed = target.is_file()
-    digest = None
-    if installed:
-        with target.open('rb') as stream:
+    bridges = sorted(path for path in dest.glob('CopilotJBridge*.jar') if path.is_file()) if dest.is_dir() else []
+    records = []
+    for path in bridges:
+        with path.open('rb') as stream:
             digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+        records.append({'file': path.name, 'bytes': path.stat().st_size, 'sha256': digest,
+                        'sha256Matches': digest == SHA256})
+    exact = next((record for record in records if record['file'] == JAR and record['sha256Matches']), None)
     return {'bridgeVersion': VERSION, 'fiji': str(fiji) if fiji else None, 'pluginsDir': str(dest),
-            'installed': installed, 'sha256Matches': digest == SHA256 if installed else False,
+            'installed': bool(records), 'readyToUse': exact is not None, 'bridges': records,
             'java': java_version(fiji) if fiji else None, 'mcpUrl': MCP,
-            'next': '使用 Fiji-Latest（Java 17+）打开 Plugins → CopilotJ → MCP Server，Host 127.0.0.1、Port 3001，点击 Start MCP。'}
+            'next': '已有匹配 Bridge，无需重复下载；使用 Fiji-Latest（Java 17+）打开 Plugins → CopilotJ → MCP Server，Host 127.0.0.1、Port 3001，点击 Start MCP。' if exact else '如已有 Fiji 可先使用现有 Bridge；需要固定版本时显式安装，不覆盖旧文件。'}
 
 
 def download(url, target):
@@ -99,7 +113,7 @@ def main():
     if args.dest:
         dest = args.dest
     else:
-        args.fiji = args.fiji or default_fiji()
+        args.fiji = args.fiji or discover_fiji()
     if not args.dest and args.fiji:
         dest = validate_fiji(args.fiji)
     elif not args.dest:
@@ -107,6 +121,11 @@ def main():
     if args.action == 'check':
         result = report(args.fiji, dest)
         print(json.dumps(result, ensure_ascii=False, indent=2) if args.json else json.dumps(result, ensure_ascii=False))
+        return
+    current = report(args.fiji, dest)
+    if current['readyToUse']:
+        print('已有匹配的 CopilotJ Bridge 1.1.0，直接使用，未下载或修改任何文件。')
+        print(json.dumps(current, ensure_ascii=False, indent=2) if args.json else '')
         return
     if not args.yes:
         parser.error('install 需要 --yes；请先阅读来源、目标目录和 Java 要求')

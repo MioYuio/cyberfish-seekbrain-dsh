@@ -33,6 +33,16 @@ dsh plugin --profile <你的profile> add github:MioYuio/cyberfish-seekbrain-dsh#
 
 本包直接分发 JavaScript 与技能资源，无需构建或安装时执行 `prepare`。建议固定 commit 而不是浮动分支。也可以在 DSH「插件 → 添加插件」中选择本地目录。
 
+### 自托管插件索引
+
+在 DSH「插件 → 自定义插件索引 → 发现 → 添加索引源」中添加：
+
+```text
+https://mioyuio.github.io/cyberfish-seekbrain-dsh/market/index.json
+```
+
+索引固定到经过测试的 Git commit。它是社区自托管索引，不表示第三方市场已人工收录或认证。
+
 ## 使用
 
 插件注册三项技能和两个确定性工具：
@@ -51,7 +61,8 @@ dsh plugin --profile <你的profile> add github:MioYuio/cyberfish-seekbrain-dsh#
 
 - **Fiji-Latest，Java 17+**。Fiji-Stable 的 Java 8 不支持 MCP；仅看到 Fiji 图标不代表满足条件。
 - 推荐使用 Fiji Updater 的 **CopilotJ** 更新站点安装，这是上游首选方式。
-- 也可使用随包安装器下载固定官方 JAR，严格校验 SHA-256：
+- 先自动发现并复用已有安装：`check` 不带 `--fiji` 时查找常见 Fiji 目录；也可手动指定。匹配 Bridge 已存在时直接提示使用，不重复下载。
+- 旧版或不匹配的 JAR 保留不覆盖；需要固定版本时再明确安装：
 
 ```bash
 # 只读检查；不会下载或修改 Fiji
