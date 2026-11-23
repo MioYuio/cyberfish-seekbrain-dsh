@@ -14,6 +14,10 @@ tags:
 version: "1.0"
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Which structural graph predictor explains functional connectivity best?
 
 Builds a battery of ~40 structural predictor matrices from the connectome and the anatomical

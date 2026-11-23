@@ -1,6 +1,8 @@
-# cyberfish-SeekBrain-0.1.4
+# cyberfish-SeekBrain (DSH plugin)
 
 面向 **DeepSeek Harness (DSH)** 的轻量 Neuroscience all-in-one 能力组合包：将 SeekBrain 配方、科研证据审计和 CopilotJ/Fiji 图像分析能力接入 DSH，**完全复用 DSH 的模型、凭据、工具与审批**。
+
+> **版本说明**：当前插件版本 `0.1.5`；内嵌 SeekBrain 配方基线 `0.1.4`。版本号 `0.1.x` 行的 patch 段随插件自身修复递增，与 SeekBrain 配方基线版本解耦——配方升级时 minor 段递增。
 
 不是另一套 Agent，不包含 SeekBrain CLI、Pi、Node 或独立 LLM 配置，也不要求再次填写 API Key。
 
@@ -108,3 +110,15 @@ export CYBERFISH_ENABLE_AUDIT_SUBAGENT=1
 ## 与 CyberFish V6 的关系
 
 两者独立版本、独立仓库、独立发布。V6 是 Mac/Windows 的 SeekBrain 便携产品，解决图形化模型配置；本插件服务于已有 DSH 的用户，**不共享配置或凭据**。
+
+## 发布流程（维护者）
+
+发布链固定为一条命令：
+
+```bash
+bash scripts/release.sh <new-version>
+```
+
+脚本会：bump `package.json` / `lib/version.js` / `scripts/copilotj-bridge.py` UA → 清 `__pycache__` → 跑 `check` + `test` → `npm pack` 到 `dist/` → commit + tag。之后按提示手动：①`npm publish --access public`；②用同一 commit 更新 `market/index.json` 的 `version/publishTimestamp/source.commit` 并推到 gh-pages；③`git push origin main && git push origin v<new-version>`。
+
+禁止跳过脚本直接 `npm publish`：会导致 npm 包与市场索引、本地 dist 三处不一致。

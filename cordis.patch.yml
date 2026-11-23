@@ -8,8 +8,8 @@
         transport: streamable-http
         url: !!js process.env.COPILOTJ_MCP_URL || 'http://127.0.0.1:3001/mcp'
         failOnStartupError: false
-        startupTimeoutMs: 5000
-        toolLoading: on-demand
+        # toolLoading / startupTimeoutMs are NOT supported on DSH 0.2.0-rc.2;
+        # they exist only on 0.2.2+/0.2.3+. Removed to match declared engines floor.
         reconnect:
           enabled: true
           initialDelayMs: 500
@@ -21,6 +21,6 @@
       config:
         provider: spawn
         toolName: brainpilot_auditor
-        modelSelection: false
-        modelDiscovery: false
+        # modelSelection / modelDiscovery are NOT supported on DSH 0.2.0-rc.2;
+        # defaults already match the intended behaviour, so the keys are dropped.
         maxDepth: 1

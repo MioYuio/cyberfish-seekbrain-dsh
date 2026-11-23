@@ -17,6 +17,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Generation of Trial-Averaged PSTHs for Population Neurons
 
 This recipe describes the methodology for constructing Peristimulus Time Histograms (PSTHs) to visualize the firing rate profiles of simultaneously recorded neurons. By aligning spike times to task-relevant events (e.g., stimulus onset) and grouping trials by behavioral variables, this analysis characterizes the neural signatures of decision-making, such as evidence accumulation and choice selectivity.

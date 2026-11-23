@@ -16,6 +16,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Decomposing Behavioral Strategies using GLM-HMM
 
 This recipe outlines the process of applying a Hidden Markov Model (HMM) framework to characterize discrete behavioral states—specifically "engaged," "left-bias," and "right-bias"—within individual experimental sessions. By incorporating a Generalized Linear Model (GLM) component, this approach allows for the interpretation of behavioral choices as a function of task-relevant inputs (stimuli and history) conditioned on a latent state.

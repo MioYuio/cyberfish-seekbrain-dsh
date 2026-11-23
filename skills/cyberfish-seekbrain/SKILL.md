@@ -16,7 +16,7 @@ description: Neuroscience all-in-one research workflow for DeepSeek Harness. Use
 ## 工作流
 
 1. 明确科学问题、数据模态、采样率、trial 结构、ROI 对齐、分组与输出。缺失则先问，不编造。
-2. 从 `references/recipes.json` 检索 68 个原始配方标识；用 DSH 的文件工具读取对应 `recipes/<分类>/<配方>/SKILL.md` 及所需 reference。不要一次加载全部配方。
+2. **优先调用 `seekbrain_recipe` 工具**检索配方：`action=search, query=<物种/模态/方法>`（支持中文关键词如"斑马鱼 环状"、"钙成像"）拿到候选 id，再 `action=get, id=<返回的 id>` 读取单个 SKILL.md 及所需 reference。不要一次加载全部配方，也不要直接读 `references/recipes.json`（裸数组效率低，工具检索更准）。
 3. 由 DSH 当前模型制定 Formulate → Code → Validate → Interpret 计划。优先最小可验证分析，不默认开展大规模批处理。
 4. 需要运行代码时，使用 DSH 的终端/文件工具，遵守用户批准。保留输入、参数、版本、日志和输出；不把生成脚本视为已验证。
 5. 使用 `brainpilot-audit` 技能及 `brainpilot_audit` 工具做证据预审，再人工追溯决策相关数据、代码和工件。

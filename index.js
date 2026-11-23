@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { auditClaim } from './lib/audit.js'
 import { readRecipe, searchRecipes } from './lib/recipes.js'
+import { VERSION } from './lib/version.js'
 
 export const name = 'cyberfish-seekbrain'
 export const inject = ['tools', 'skills']
@@ -15,7 +16,7 @@ const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
 function metadata(text, file) {
   const match = FRONTMATTER.exec(text)
   if (!match) throw new Error(`${file} 缺少 YAML frontmatter`)
-  const name = match[1].match(/^name:\s*([a-z0-9][a-z0-9-]*)\s*$/m)?.[1]
+  const name = match[1].match(/^name:\s*["']?([a-zA-Z0-9][a-zA-Z0-9_-]*)["']?\s*$/m)?.[1]
   const description = match[1].match(/^description:\s*(.+)\s*$/m)?.[1]
   if (!name || !description) throw new Error(`${file} 需要单行 name/description`)
   return { name, description }
@@ -27,7 +28,13 @@ async function bundledSkills() {
   for (const entry of await readdir(root, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue
     const path = join(root, entry.name, 'SKILL.md')
-    const text = await readFile(path, 'utf8')
+    let text
+    try {
+      text = await readFile(path, 'utf8')
+    } catch {
+      // Skip stray directories without SKILL.md instead of failing plugin startup.
+      continue
+    }
     const meta = metadata(text, path)
     result.push({ ...meta, invocation: { modelInvocable: true, userInvocable: true }, source: 'bundled',
       resourceBase: { kind: 'directory', path: dirname(path) }, path, content: text.slice(FRONTMATTER.exec(text)[0].length).trim() })
@@ -48,13 +55,27 @@ export async function apply(ctx) {
       limit: { type: 'integer', description: 'search结果上限，默认8，范围1–20。' },
     },
     output: {
-      schema: { type: 'json' },
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          version: { type: 'string' },
+          recipes: { type: 'array', items: { type: 'object', additionalProperties: true } },
+          id: { type: 'string' },
+          content: { type: 'string' },
+          truncated: { type: 'boolean' },
+          resourceBase: { type: 'string' },
+          note: { type: 'string' },
+        },
+      },
       render: (_args, value) => [{ type: 'text', text: JSON.stringify(value, null, 2) }],
     },
     async execute(args) {
-      const result = args.action === 'search' ? { version: '0.1.4', recipes: await searchRecipes(args.query, args.limit) }
+      // DSH 0.2.x ToolDefinition: return canonical value only.
+      // output.render projects it into content blocks; do NOT wrap in {content, details}.
+      return args.action === 'search'
+        ? { version: VERSION, recipes: await searchRecipes(args.query, args.limit) }
         : await readRecipe(args.id)
-      return { content: [{ type: 'json', json: result }], details: result }
     },
   }))
   ctx.tools.register(defineTool({
@@ -67,12 +88,36 @@ export async function apply(ctx) {
       artifacts: { type: 'array', items: { type: 'string' }, description: '用户提供的工件标识；缺失时对应证据项为 unverified。' },
     },
     output: {
-      schema: { type: 'json' },
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          verdict: { type: 'string', enum: ['revise', 'unverified'] },
+          findings: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                id: { type: 'string' },
+                status: { type: 'string', enum: ['flaw', 'unverified'] },
+                evidence: { type: 'string' },
+                reason: { type: 'string' },
+              },
+            },
+          },
+          scope: { type: 'string' },
+          next: { type: 'array', items: { type: 'string' } },
+        },
+      },
       render: (_args, value) => [{ type: 'text', text: JSON.stringify(value, null, 2) }],
     },
     async execute(args) {
-      const result = await auditClaim({ ...args, text: args.action === 'text' ? args.text : undefined, path: args.action === 'file' ? args.path : undefined })
-      return { content: [{ type: 'json', json: result }], details: result }
+      return auditClaim({
+        ...args,
+        text: args.action === 'text' ? args.text : undefined,
+        path: args.action === 'file' ? args.path : undefined,
+      })
     },
   }))
 }

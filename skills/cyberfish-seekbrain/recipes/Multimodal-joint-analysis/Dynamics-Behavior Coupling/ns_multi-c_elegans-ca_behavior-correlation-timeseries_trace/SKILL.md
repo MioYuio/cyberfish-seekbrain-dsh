@@ -16,6 +16,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Multi-Timescale Velocity Encoding Analysis
 
 This recipe focuses on characterizing the temporal integration properties of individual neurons by assessing how their firing rates correlate with the animal's velocity filtered over a broad spectrum of temporal decay constants ($\tau$). By applying exponentially weighted moving averages (EWMA) to behavioral velocity traces, we can identify whether a neuron is tuned to momentary bursts of speed or sustained average running pace.

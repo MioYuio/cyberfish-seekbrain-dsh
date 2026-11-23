@@ -6,7 +6,8 @@
   install --dest /empty/or/new/plugins/dir --yes [--json]
 
 只下载官方 Release 的固定 JAR，校验 SHA-256 后原子落盘。
-默认 Fiji：/Applications/Fiji.app（macOS）；Windows 必须显式指定。
+默认 Fiji 候选：/Applications/Fiji.app、~/Applications/Fiji.app、~/Fiji.app（macOS）；
+Windows 也会自动查找 ProgramFiles / LOCALAPPDATA 下的 Fiji/Fiji.app/fiji，但生产环境建议显式 --fiji 指定。
 无 --yes 不下载或修改。安装后用户自行启动 Fiji-Latest（Java 17+）并开启 MCP。
 """
 import argparse
@@ -21,7 +22,8 @@ import tempfile
 import re
 import urllib.request
 
-VERSION = '1.1.0'
+VERSION = '1.1.0'  # CopilotJ Bridge JAR version (upstream release)
+PLUGIN_VERSION = '0.1.5'  # cyberfish-seekbrain bundle version — bump with lib/version.js
 URL = f'https://github.com/neurogeom/CopilotJ/releases/download/v{VERSION}/CopilotJBridge-{VERSION}.jar'
 SHA256 = '63152895fecc63db641df2c44aae8a636e5831f5910e2fefe736130a5b3de223'
 JAR = f'CopilotJBridge-{VERSION}.jar'
@@ -31,7 +33,7 @@ MCP = 'http://127.0.0.1:3001/mcp'
 def candidate_fijis():
     home = pathlib.Path.home()
     if sys.platform == 'darwin':
-        return [pathlib.Path('/Applications/Fiji.app'), home / 'Applications/Fiji.app']
+        return [pathlib.Path('/Applications/Fiji.app'), home / 'Applications/Fiji.app', home / 'Fiji.app']
     if sys.platform == 'win32':
         roots = [pathlib.Path(os.environ.get('ProgramFiles', 'C:/Program Files')),
                  pathlib.Path(os.environ.get('LOCALAPPDATA', str(home / 'AppData/Local')))]
@@ -47,8 +49,6 @@ def discover_fiji():
 
 
 def plugins_dir(fiji):
-    if sys.platform == 'darwin':
-        return fiji / 'plugins'
     return fiji / 'plugins'
 
 
@@ -64,13 +64,14 @@ def java_version(fiji):
     candidates = []
     if sys.platform == 'darwin':
         candidates += [fiji / 'java/macosx/arm64/bin/java', fiji / 'java/macosx/x86_64/bin/java']
+        # ARM64 Fiji-Latest may nest one extra JDK directory level (e.g. java/macosx/arm64/zulu-17.jdk/bin/java).
+        candidates += list(fiji.glob('java/macosx/arm64/*/bin/java')) + list(fiji.glob('java/macosx/x86_64/*/bin/java'))
     candidates += list(fiji.glob('java/*/*/bin/java')) + list(fiji.glob('java/*/*/bin/java.exe'))
+    candidates += list(fiji.glob('java/*/*/*/bin/java')) + list(fiji.glob('java/*/*/*/bin/java.exe'))
     candidates += list(fiji.glob('java/*/bin/java')) + list(fiji.glob('java/*/bin/java.exe'))
     java = next((path for path in candidates if path.is_file()), None)
     if java is None:
         return {'available': False, 'reason': '未找到 Fiji 内 Java；MCP 需要 Fiji-Latest / Java 17+，不使用系统 Java 代替。'}
-    if not java:
-        return {'available': False, 'reason': '未找到 Fiji 内 Java；MCP 需要 Fiji-Latest / Java 17+。'}
     try:
         result = subprocess.run([str(java), '-version'], capture_output=True, text=True, timeout=10)
         text = (result.stdout + result.stderr).strip().splitlines()[0]
@@ -99,7 +100,7 @@ def report(fiji, dest):
 
 
 def download(url, target):
-    request = urllib.request.Request(url, headers={'User-Agent': 'cyberfish-seekbrain-dsh/0.1.4'})
+    request = urllib.request.Request(url, headers={'User-Agent': f'cyberfish-seekbrain-dsh/{PLUGIN_VERSION}'})
     with urllib.request.urlopen(request, timeout=90) as response:
         if response.status != 200:
             raise SystemExit(f'下载失败 HTTP {response.status}')

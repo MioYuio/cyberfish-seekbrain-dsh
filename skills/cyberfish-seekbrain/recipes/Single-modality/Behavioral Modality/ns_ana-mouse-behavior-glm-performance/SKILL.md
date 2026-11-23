@@ -16,6 +16,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Bayesian Model Comparison of Behavioral Prior Strategies
 
 This recipe implements a hierarchical Bayesian model comparison framework to evaluate cognitive strategies—specifically the Bayes-optimal observer, stimulus kernel, and action kernel—underlying trial-by-trial choice behavior. By estimating the log-marginal likelihood for each model at the session level, we quantify the probability that a specific model architecture best accounts for subject choices across a population.

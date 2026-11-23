@@ -78,6 +78,10 @@ def main():
     parser.add_argument("--output_dir", type=str, default="./output")
     args = parser.parse_args()
 
+    # Ensure output directory exists before savefig / result writes.
+    import os
+    os.makedirs(args.output_dir, exist_ok=True)
+
     # Data Loading
     cache = EcephysProjectCache(manifest="manifest.json")
     session = cache.get_session_data(args.session_id)

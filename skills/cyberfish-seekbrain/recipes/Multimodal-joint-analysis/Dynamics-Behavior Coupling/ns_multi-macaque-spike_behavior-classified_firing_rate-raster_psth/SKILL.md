@@ -16,6 +16,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Analysis of PMd Single-Neuron Spiking Dynamics via CP Tensor Decomposition
 
 This recipe focuses on characterizing the firing rate dynamics of individual neurons in the macaque dorsal premotor cortex (PMd) during perceptual decision-making tasks, such as Random Dot Motion (RDM). By bridging the gap between single-neuron electrophysiology and population-level dimensionality reduction, this approach allows researchers to evaluate how spiking activity reflects decision variables like stimulus difficulty (coherence) and target choice.

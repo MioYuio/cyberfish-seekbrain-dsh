@@ -1,7 +1,7 @@
 {
   "name": "cyberfish-seekbrain",
-  "version": "0.1.4",
-  "description": "CyberFish-SeekBrain-0.1.4: a lightweight Neuroscience all-in-one skill and tool bundle for DeepSeek Harness, with 68 SeekBrain recipes, evidence audit, and native MCP support for CopilotJ.",
+  "version": "0.1.5",
+  "description": "CyberFish-SeekBrain-0.1.5: a lightweight Neuroscience all-in-one skill and tool bundle for DeepSeek Harness, with 68 SeekBrain recipes (baseline SeekBrain 0.1.4), evidence audit, and native MCP support for CopilotJ.",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -33,12 +33,7 @@
     "check": "node --check index.js && node --check lib/recipes.js && node --check lib/audit.js && python3 -m py_compile scripts/copilotj-bridge.py",
     "test": "node --test test/*.test.js",
     "copilotj:check": "python3 scripts/copilotj-bridge.py check",
-    "prepack": "npm run check && npm test"
-  },
-  "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.0.4",
-    "@deepseek-ai/dsh-skill": "0.2.0-rc.2",
-    "@deepseek-ai/dsh-tools": "0.2.0-rc.2"
+    "prepack": "npm run check && npm test && node scripts/clean-pycache.mjs"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.4",

@@ -17,6 +17,10 @@ tags:
 version: '1.0'
 ---
 
+> ⚠️ **DEMO / SYNTHETIC DATA ONLY — DO NOT USE FOR RESEARCH CONCLUSIONS**
+>
+> This recipe ships with synthetic data generators, placeholder implementations, or random-number-based routines that let the workflow execute end-to-end. Numbers, figures and statistics produced by the default run are **not** scientific results. Before citing or publishing any output, replace the synthetic / placeholder components with real data and verified algorithms, and run a `brainpilot_audit` pass.
+
 # Analyzing Heterogeneous Neuronal Dynamics in PMd via Tensor Decomposition
 
 This recipe provides a computational framework to characterize neuronal firing rate profiles during perceptual decision-making tasks, specifically in the macaque dorsal premotor cortex (PMd). By synthesizing the foundational work of Cisek & Kalaska (2005) with modern tensor decomposition techniques, this recipe enables researchers to move beyond the traditional "accumulator" (ramping) model of decision-making.
