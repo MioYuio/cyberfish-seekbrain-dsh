@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "title": {
+    "en": "CyberFish Neuroscience Plugins",
+    "zh": "CyberFish 神经科学插件"
+  },
+  "description": {
+    "en": "Research capability bundles for DeepSeek Harness, using the host model and credentials.",
+    "zh": "面向 DeepSeek Harness 的科研能力组合包，继承宿主模型与凭据。"
+  },
+  "metadata": {
+    "categories": {
+      "neuroscience": {
+        "title": {
+          "en": "Neuroscience",
+          "zh": "神经科学"
+        }
+      }
+    },
+    "labels": {
+      "research": {
+        "title": {
+          "en": "Scientific research",
+          "zh": "科学研究"
+        }
+      },
+      "bioimage": {
+        "title": {
+          "en": "Bioimage analysis",
+          "zh": "生物图像分析"
+        }
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "cyberfish-seekbrain",
+      "title": {
+        "en": "CyberFish SeekBrain — Neuroscience All-in-One",
+        "zh": "CyberFish SeekBrain 神经科学研究"
+      },
+      "description": {
+        "en": "68 SeekBrain recipes, evidence audit, and native CopilotJ MCP support. Uses DSH's model and credentials; no separate LLM configuration.",
+        "zh": "68 个 SeekBrain 配方、证据审计、原生 CopilotJ MCP；完全继承 DSH 模型与凭据，无需重复配置 API Key。"
+      },
+      "icon": "icons/cyberfish-seekbrain.svg",
+      "author": "MioYuio / BAIC Lab",
+      "homepage": "https://github.com/MioYuio/cyberfish-seekbrain-dsh#readme",
+      "repository": {
+        "url": "https://github.com/MioYuio/cyberfish-seekbrain-dsh"
+      },
+      "metadata": {
+        "category": "neuroscience",
+        "labels": ["research", "bioimage"]
+      },
+      "versions": [
+        {
+          "version": "0.1.4",
+          "publishTimestamp": 1795420331,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/MioYuio/cyberfish-seekbrain-dsh",
+            "commit": "6410616206f3cf63ebb6b4907118b8be4960121a"
+          },
+          "engines": {
+            "dsh": ">=0.2.0-rc.2 <0.3.0"
+          }
+        }
+      ]
+    }
+  ]
+}

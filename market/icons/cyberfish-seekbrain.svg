@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="CyberFish SeekBrain">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1557a0"/><stop offset="1" stop-color="#237a78"/></linearGradient></defs>
+  <rect width="128" height="128" rx="28" fill="#f5f9ff"/>
+  <path d="M23 65c20-28 51-29 69-6l16-9-2 31-18-4c-9 29-43 35-65 13l15-5c-9-4-13-9-15-20Z" fill="url(#g)"/>
+  <circle cx="69" cy="59" r="5" fill="#fff"/>
+  <path d="M41 47c5-16 18-26 34-25M43 85c10 11 22 15 36 11" fill="none" stroke="#237a78" stroke-width="5" stroke-linecap="round"/>
+  <path d="M81 29c6-13 25-10 24 3-1 10-15 21-21 27-5-7-15-20-14-28 1-10 13-11 18-5" fill="none" stroke="#1557a0" stroke-width="4" stroke-linejoin="round"/>
+</svg>
