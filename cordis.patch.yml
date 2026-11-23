@@ -1,0 +1,26 @@
+- insert:
+    - id: cyberfish-seekbrain
+      name: cyberfish-seekbrain
+    - id: cyberfish-copilotj-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: copilotj
+        transport: streamable-http
+        url: !!js process.env.COPILOTJ_MCP_URL || 'http://127.0.0.1:3001/mcp'
+        failOnStartupError: false
+        startupTimeoutMs: 5000
+        toolLoading: on-demand
+        reconnect:
+          enabled: true
+          initialDelayMs: 500
+          maxDelayMs: 30000
+          maxAttempts: 10
+    - id: cyberfish-brainpilot-auditor
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: !!js process.env.CYBERFISH_ENABLE_AUDIT_SUBAGENT !== '1'
+      config:
+        provider: spawn
+        toolName: brainpilot_auditor
+        modelSelection: false
+        modelDiscovery: false
+        maxDepth: 1

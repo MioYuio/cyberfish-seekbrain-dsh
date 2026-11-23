@@ -1,0 +1,74 @@
+{
+  "name": "cyberfish-seekbrain",
+  "version": "0.1.4",
+  "description": "CyberFish-SeekBrain-0.1.4: a lightweight Neuroscience all-in-one skill and tool bundle for DeepSeek Harness, with 68 SeekBrain recipes, evidence audit, and native MCP support for CopilotJ.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./audit": "./lib/audit.js",
+    "./recipes": "./lib/recipes.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "skills/",
+    "scripts/",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/",
+    "docs/",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=22.19.0",
+    "dsh": ">=0.2.0-rc.2 <0.3.0"
+  },
+  "scripts": {
+    "check": "node --check index.js && node --check lib/recipes.js && node --check lib/audit.js && python3 -m py_compile scripts/copilotj-bridge.py",
+    "test": "node --test test/*.test.js",
+    "copilotj:check": "python3 scripts/copilotj-bridge.py check",
+    "prepack": "npm run check && npm test"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-skill": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/dsh-skill": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2",
+    "@deepseek-ai/schemastery": "3.18.4"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "MioYuio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MioYuio/cyberfish-seekbrain-dsh.git"
+  },
+  "homepage": "https://github.com/MioYuio/cyberfish-seekbrain-dsh#readme",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "seekbrain",
+    "neuroscience",
+    "bioimage",
+    "copilotj",
+    "mcp",
+    "scientific-research"
+  ]
+}
