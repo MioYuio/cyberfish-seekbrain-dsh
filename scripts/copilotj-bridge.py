@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import re
 import urllib.request
 
 VERSION = '1.1.0'
@@ -63,15 +64,21 @@ def java_version(fiji):
     candidates = []
     if sys.platform == 'darwin':
         candidates += [fiji / 'java/macosx/arm64/bin/java', fiji / 'java/macosx/x86_64/bin/java']
+    candidates += list(fiji.glob('java/*/*/bin/java')) + list(fiji.glob('java/*/*/bin/java.exe'))
     candidates += list(fiji.glob('java/*/bin/java')) + list(fiji.glob('java/*/bin/java.exe'))
-    java = next((path for path in candidates if path.is_file()), shutil.which('java'))
+    java = next((path for path in candidates if path.is_file()), None)
+    if java is None:
+        return {'available': False, 'reason': '未找到 Fiji 内 Java；MCP 需要 Fiji-Latest / Java 17+，不使用系统 Java 代替。'}
     if not java:
         return {'available': False, 'reason': '未找到 Fiji 内 Java；MCP 需要 Fiji-Latest / Java 17+。'}
     try:
         result = subprocess.run([str(java), '-version'], capture_output=True, text=True, timeout=10)
         text = (result.stdout + result.stderr).strip().splitlines()[0]
-        return {'available': result.returncode == 0, 'versionText': text, 'path': str(java),
-                'note': '请确认该 Java >=17；Fiji-Stable 的 Java 8 不支持 MCP。'}
+        match = re.search(r'version "([^"]+)"', text)
+        version_text = match.group(1) if match else text
+        major = 1 if version_text.startswith('1.') else int(version_text.split('.')[0]) if version_text.split('.')[0].isdigit() else 0
+        return {'available': result.returncode == 0 and major >= 17, 'versionText': text, 'path': str(java),
+                'major': major, 'note': 'MCP 需要 Java 17+；Fiji-Stable 的 Java 8 不支持。' if major < 17 else 'Java 版本满足 MCP 要求。'}
     except (OSError, subprocess.TimeoutExpired) as error:
         return {'available': False, 'reason': str(error)}
 
